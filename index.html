@@ -1012,18 +1012,22 @@
   document.getElementById('year').textContent = new Date().getFullYear();
 
   /* =====================================================================
-     CONFIG — replace these two placeholders before publishing:
+     CONFIG — replace these placeholders before publishing:
      1) WHATSAPP_NUMBER: your own WhatsApp number (country code, no +, no spaces)
         e.g. UK number +44 7911 123456 -> "447911123456"
         Leads land in YOUR WhatsApp — you forward hot/warm ones to your
         Dubai broker contacts yourself.
-     2) FORMSPREE_ENDPOINT (optional): if you want a backup copy of every
-        submission emailed to you as well, sign up free at
-        https://formspree.io, create a form, and paste the endpoint URL
-        below. Leave it as null to skip this and rely on WhatsApp only.
+     2) CONVERTKIT_FORM_ID / CONVERTKIT_API_KEY: your ConvertKit form's
+        public ID and API key, so every submission also lands as a
+        subscriber and triggers your 5-email nurture sequence.
+        Find these in ConvertKit under Grow > Landing Pages & Forms >
+        [your form] > Settings > Embed, and Account Settings > API.
+        Leave CONVERTKIT_FORM_ID as null to skip ConvertKit and rely on
+        WhatsApp only.
   ===================================================================== */
   const WHATSAPP_NUMBER = "447788725419"; // <-- REPLACE with your real WhatsApp number
-  const FORMSPREE_ENDPOINT = null; // e.g. "https://formspree.io/f/mbdnalzw"
+  const CONVERTKIT_FORM_ID = null; // <-- "af43d37123";
+  const CONVERTKIT_API_KEY = null; // <-- "v_OB6Te-TBCydx2QUqzT4A";
 
   function buildWhatsAppMessage(data){
     return (
@@ -1042,6 +1046,45 @@
   function openWhatsApp(message){
     const url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
     window.open(url, "_blank", "noopener");
+  }
+
+  // Sends the lead to ConvertKit as a subscriber, tagged with the fields
+  // your nurture sequence and lead-scoring logic can use. Non-blocking —
+  // if this fails, the WhatsApp handoff still proceeds so you never lose
+  // the lead entirely.
+  async function submitToConvertKit(data){
+    if(!CONVERTKIT_FORM_ID || !CONVERTKIT_API_KEY) return;
+
+    const [firstName, ...rest] = data.fname.split(" ");
+
+    try{
+      const res = await fetch(
+        "https://api.convertkit.com/v3/forms/" + CONVERTKIT_FORM_ID + "/subscribe",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            api_key: CONVERTKIT_API_KEY,
+            email: data.email,
+            first_name: firstName,
+            fields: {
+              phone: data.phone,
+              last_name: rest.join(" "),
+              based_in: data.city,
+              budget: data.budget,
+              goal: data.purpose,
+              preferred_area: data.area || "Not specified",
+              timeline: data.timeline
+            }
+          })
+        }
+      );
+      if(!res.ok){
+        console.warn("ConvertKit submission failed:", res.status, await res.text());
+      }
+    }catch(err){
+      console.warn("ConvertKit submission failed:", err);
+    }
   }
 
   // Generic WhatsApp buttons (hero + final CTA) with a simple pre-filled intro
@@ -1079,20 +1122,10 @@
       timeline: form.timeline.value
     };
 
-    // Optional: also send a copy to Formspree (or any form backend) if configured
-    if(FORMSPREE_ENDPOINT){
-      try{
-        await fetch(FORMSPREE_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify(data)
-        });
-      }catch(err){
-        // Non-blocking — WhatsApp handoff below still proceeds even if this fails
-        console.warn("Backup form submission failed:", err);
-      }
-    }
-
+    // Fire the ConvertKit subscription and the WhatsApp handoff together.
+    // ConvertKit is awaited briefly (it's fire-and-forget internally — see
+    // submitToConvertKit — so it can never block or delay WhatsApp opening).
+    submitToConvertKit(data);
     openWhatsApp(buildWhatsAppMessage(data));
 
     status.textContent = "Thanks — we've opened WhatsApp with your details pre-filled. Just hit send there to complete your enquiry.";
