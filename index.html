@@ -1012,22 +1012,20 @@
   document.getElementById('year').textContent = new Date().getFullYear();
 
   /* =====================================================================
-     CONFIG — replace these placeholders before publishing:
+     CONFIG — replace this placeholder before publishing:
      1) WHATSAPP_NUMBER: your own WhatsApp number (country code, no +, no spaces)
         e.g. UK number +44 7911 123456 -> "447911123456"
         Leads land in YOUR WhatsApp — you forward hot/warm ones to your
         Dubai broker contacts yourself.
-     2) CONVERTKIT_FORM_ID / CONVERTKIT_API_KEY: your ConvertKit form's
-        public ID and API key, so every submission also lands as a
-        subscriber and triggers your 5-email nurture sequence.
-        Find these in ConvertKit under Grow > Landing Pages & Forms >
-        [your form] > Settings > Embed, and Account Settings > API.
-        Leave CONVERTKIT_FORM_ID as null to skip ConvertKit and rely on
+     2) CONVERTKIT_FORM_ID: your Kit form's ID (from the embed code, e.g.
+        the number in https://app.kit.com/forms/XXXXXXX/subscriptions).
+        This uses Kit's public, key-free form endpoint — the same one
+        their own embed code uses — so no API key ever needs to sit in
+        this public file. Leave as null to skip ConvertKit and rely on
         WhatsApp only.
   ===================================================================== */
   const WHATSAPP_NUMBER = "447788725419"; // <-- REPLACE with your real WhatsApp number
-  const CONVERTKIT_FORM_ID = null; // <-- "9715318";
-  const CONVERTKIT_API_KEY = null; // <-- "v_OB6Te-TBCydx2QUqzT4A";
+  const CONVERTKIT_FORM_ID = "9715318"; // <-- your Kit form ID
 
   function buildWhatsAppMessage(data){
     return (
@@ -1048,43 +1046,56 @@
     window.open(url, "_blank", "noopener");
   }
 
-  // Sends the lead to ConvertKit as a subscriber, tagged with the fields
-  // your nurture sequence and lead-scoring logic can use. Non-blocking —
-  // if this fails, the WhatsApp handoff still proceeds so you never lose
-  // the lead entirely.
-  async function submitToConvertKit(data){
-    if(!CONVERTKIT_FORM_ID || !CONVERTKIT_API_KEY) return;
+  // Sends the lead to Kit (ConvertKit) as a subscriber, using Kit's public
+  // form endpoint — the same one their own embed code posts to. No API
+  // key is used or needed, so nothing sensitive lives in this public file.
+  // Submitted via a hidden iframe (the standard technique for this) so it
+  // never blocks or interferes with the WhatsApp handoff, and never hits
+  // browser CORS restrictions the way a fetch() call to this endpoint would.
+  function submitToConvertKit(data){
+    if(!CONVERTKIT_FORM_ID) return;
 
     const [firstName, ...rest] = data.fname.split(" ");
 
-    try{
-      const res = await fetch(
-        "https://api.convertkit.com/v3/forms/" + CONVERTKIT_FORM_ID + "/subscribe",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            api_key: CONVERTKIT_API_KEY,
-            email: data.email,
-            first_name: firstName,
-            fields: {
-              phone: data.phone,
-              last_name: rest.join(" "),
-              based_in: data.city,
-              budget: data.budget,
-              goal: data.purpose,
-              preferred_area: data.area || "Not specified",
-              timeline: data.timeline
-            }
-          })
-        }
-      );
-      if(!res.ok){
-        console.warn("ConvertKit submission failed:", res.status, await res.text());
-      }
-    }catch(err){
-      console.warn("ConvertKit submission failed:", err);
+    // Reuse one hidden iframe across submissions rather than creating a new one each time
+    let iframe = document.getElementById('ck-target-frame');
+    if(!iframe){
+      iframe = document.createElement('iframe');
+      iframe.name = 'ck-target-frame';
+      iframe.id = 'ck-target-frame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
     }
+
+    const formEl = document.createElement('form');
+    formEl.action = "https://app.kit.com/forms/" + CONVERTKIT_FORM_ID + "/subscriptions";
+    formEl.method = "POST";
+    formEl.target = "ck-target-frame";
+    formEl.style.display = "none";
+
+    const fields = {
+      email_address: data.email,
+      first_name: firstName,
+      "fields[phone]": data.phone,
+      "fields[last_name]": rest.join(" "),
+      "fields[based_in]": data.city,
+      "fields[budget]": data.budget,
+      "fields[goal]": data.purpose,
+      "fields[preferred_area]": data.area || "Not specified",
+      "fields[timeline]": data.timeline
+    };
+
+    Object.keys(fields).forEach(function(key){
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      formEl.appendChild(input);
+    });
+
+    document.body.appendChild(formEl);
+    formEl.submit();
+    document.body.removeChild(formEl);
   }
 
   // Generic WhatsApp buttons (hero + final CTA) with a simple pre-filled intro
@@ -1122,9 +1133,9 @@
       timeline: form.timeline.value
     };
 
-    // Fire the ConvertKit subscription and the WhatsApp handoff together.
-    // ConvertKit is awaited briefly (it's fire-and-forget internally — see
-    // submitToConvertKit — so it can never block or delay WhatsApp opening).
+    // Fire the Kit (ConvertKit) subscription and the WhatsApp handoff together.
+    // The Kit submission goes via a hidden iframe (see submitToConvertKit) so
+    // it can never block, delay, or break the WhatsApp handoff below.
     submitToConvertKit(data);
     openWhatsApp(buildWhatsAppMessage(data));
 
