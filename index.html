@@ -1055,8 +1055,6 @@
   function submitToConvertKit(data){
     if(!CONVERTKIT_FORM_ID) return;
 
-    const [firstName, ...rest] = data.fname.split(" ");
-
     // Reuse one hidden iframe across submissions rather than creating a new one each time
     let iframe = document.getElementById('ck-target-frame');
     if(!iframe){
@@ -1075,9 +1073,8 @@
 
     const fields = {
       email_address: data.email,
-      first_name: firstName,
+      first_name: data.fname, // full name as typed, matching the landing page's single Full Name field
       "fields[phone]": data.phone,
-      "fields[last_name]": rest.join(" "),
       "fields[based_in]": data.city,
       "fields[budget]": data.budget,
       "fields[goal]": data.purpose,
