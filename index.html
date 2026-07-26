@@ -350,6 +350,24 @@
     margin-top:14px;
   }
 
+  /* Market switcher */
+  .market-switch{
+    display:inline-flex; gap:4px; padding:4px; margin-bottom:22px;
+    background:rgba(244,239,227,0.06); border:1px solid rgba(201,162,39,0.25);
+    border-radius:8px;
+  }
+  .market-btn{
+    appearance:none; border:none; background:transparent; cursor:pointer;
+    padding:8px 14px; font-family:inherit; font-size:12.5px; font-weight:600;
+    letter-spacing:.02em; color:rgba(244,239,227,0.65); border-radius:5px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .market-btn:hover{color:var(--brass-300);}
+  .market-btn.active{background:var(--brass-500); color:var(--navy-950);}
+  @media (max-width:640px){
+    .market-switch{flex-wrap:wrap;}
+  }
+
   /* Why Dubai grid */
   .grid-6{
     display:grid;
@@ -665,7 +683,7 @@
     <a href="#top" class="logo">LDN<span class="code">→</span>DXB <span style="opacity:.55; font-weight:400;">Property Desk</span></a>
     <ul class="nav-links">
       <li><a href="#why">Why Dubai</a></li>
-      <li><a href="#uk-nri">For UK &amp; NRI Buyers</a></li>
+      <li><a href="#uk-nri">For UK, NRI &amp; India Buyers</a></li>
       <li><a href="#process">How It Works</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
@@ -679,9 +697,14 @@
   <section class="hero" style="padding-top:64px;">
     <div class="wrap hero-inner">
       <div>
-        <span class="eyebrow">LHR / MAN / BHX → DXB · By referral only</span>
-        <h1>Your Dubai address,<br><em>secured from London.</em></h1>
-        <p class="lead">A private desk for UK-based and NRI buyers who want in on Dubai property — tax-free rental income, Golden Visa eligibility, and a fully remote buying process — matched with vetted, RERA-regulated brokers on the ground in Dubai.</p>
+        <div class="market-switch" role="tablist" aria-label="Which describes you?">
+          <button type="button" class="market-btn active" data-market="uk" role="tab" aria-selected="true">UK Resident</button>
+          <button type="button" class="market-btn" data-market="uk-nri" role="tab" aria-selected="false">UK-based NRI</button>
+          <button type="button" class="market-btn" data-market="india" role="tab" aria-selected="false">India-based Buyer</button>
+        </div>
+        <span class="eyebrow" id="hero-eyebrow">LHR / MAN / BHX → DXB · By referral only</span>
+        <h1 id="hero-headline">Your Dubai address,<br><em>secured from London.</em></h1>
+        <p class="lead" id="hero-lead">A private desk for UK-based and NRI buyers who want in on Dubai property — tax-free rental income, Golden Visa eligibility, and a fully remote buying process — matched with vetted, RERA-regulated brokers on the ground in Dubai.</p>
         <div class="hero-ctas">
           <a href="#lead-form" class="btn-primary">Get My Personalised Shortlist →</a>
           <a href="#" id="hero-whatsapp" class="btn-ghost">Chat on WhatsApp</a>
@@ -692,7 +715,7 @@
       <div class="stamp-panel">
         <div class="stamp-row"><span>ENQUIRY CLASS</span><span>PRIVATE / REFERRAL</span></div>
         <div class="stamp-route">LON <span class="arrow">✈</span> DXB</div>
-        <div class="stamp-sub">PASSENGER TYPE: UK RESIDENT / UK NRI &nbsp;·&nbsp; STATUS: ENQUIRY OPEN</div>
+        <div class="stamp-sub" id="stamp-sub">PASSENGER TYPE: UK RESIDENT &nbsp;·&nbsp; STATUS: ENQUIRY OPEN</div>
         <div class="stamp-grid">
           <div><div class="k">Entry Ownership</div><div class="v">100% Freehold</div></div>
           <div><div class="k">Personal Tax</div><div class="v">0% on Rent &amp; Gains</div></div>
@@ -734,7 +757,7 @@
         <div class="card">
           <div class="idx">02 / Visa</div>
           <h3>A path to UAE residency</h3>
-          <p>Property investment above the qualifying threshold can support a long-term UAE Golden Visa, giving you and eligible family members renewable residency — useful for buyers who want a base in the Gulf, not just a rental asset.</p>
+          <p>Property investment above the qualifying threshold can support a long-term UAE Golden Visa, giving you and eligible family members renewable residency. As of February 2026, the previous requirement to pay 50% upfront was removed — mortgaged properties now qualify from day one, provided the total property value meets the threshold.</p>
         </div>
         <div class="card">
           <div class="idx">03 / Yield</div>
@@ -764,30 +787,11 @@
   <section id="uk-nri" style="background:var(--white);">
     <div class="wrap split">
       <div>
-        <span class="eyebrow">Built for this route specifically</span>
-        <h2 style="margin-top:14px; font-size:clamp(24px,3vw,32px); color:var(--navy-950);">The questions only London &amp; NRI buyers ask</h2>
+        <span class="eyebrow" id="concerns-eyebrow">Built for this route specifically</span>
+        <h2 id="concerns-heading" style="margin-top:14px; font-size:clamp(24px,3vw,32px); color:var(--navy-950);">The questions only London &amp; NRI buyers ask</h2>
 
-        <div style="margin-top:26px;">
-          <div class="concern">
-            <span class="tag">REMOTE</span>
-            <div><h4>Can I really buy without flying out?</h4><p>Yes — KYC, reservation, and signing can be completed remotely with your matched broker, with a site visit optional rather than required before completion.</p></div>
-          </div>
-          <div class="concern">
-            <span class="tag">FX</span>
-            <div><h4>How do I handle GBP → AED currency risk?</h4><p>Your broker can talk you through staged payment plans and currency timing options — this is a decision worth taking independent FX advice on, especially for larger sums.</p></div>
-          </div>
-          <div class="concern">
-            <span class="tag">REPATRIATION</span>
-            <div><h4>Can I get rental income and sale proceeds back to the UK or India?</h4><p>The UAE has no capital controls on repatriation, but your own tax residency, and any UK or India-UAE tax treaty position, will determine what you owe at home. We'll flag this — we won't advise on it ourselves.</p></div>
-          </div>
-          <div class="concern">
-            <span class="tag">FINANCE</span>
-            <div><h4>Are Sharia-compliant or NRI-specific mortgages available?</h4><p>A number of UAE banks and financiers offer Islamic and non-resident financing structures. Your matched broker can point you to lenders who work with UK/NRI applicants.</p></div>
-          </div>
-          <div class="concern">
-            <span class="tag">AFTERCARE</span>
-            <div><h4>Who manages the property once I own it?</h4><p>Most buyers on this route don't relocate immediately. Property management, tenanting and maintenance are typically arranged through the broker's partner network after handover.</p></div>
-          </div>
+        <div style="margin-top:26px;" id="concerns-list">
+          <!-- populated by JS per selected market -->
         </div>
       </div>
 
@@ -835,7 +839,7 @@
         <div class="tstep">
           <span class="status">LANDED</span>
           <h4>Reserve &amp; complete</h4>
-          <p>Your broker handles reservation, contracts, escrow and handover — remotely, or on your next visit to Dubai.</p>
+          <p id="step4-desc">Your broker handles reservation, contracts, escrow and handover — remotely, or on your next visit to Dubai.</p>
           <div class="time">STEP 04 — ON YOUR TERMS</div>
         </div>
       </div>
@@ -954,7 +958,7 @@
         </details>
         <details>
           <summary>What's the minimum investment for a Golden Visa?</summary>
-          <p>As a general guide, UAE property-based Golden Visas have been available from AED 2 million (roughly £425,000–£450,000 depending on exchange rates) in qualifying property. Thresholds and rules are set by UAE authorities and can change — your broker will confirm current criteria before you commit to anything.</p>
+          <p>As a general guide, UAE property-based Golden Visas have been available from AED 2 million (roughly £425,000–£450,000 depending on exchange rates) in qualifying property. As of February 2026, mortgaged properties qualify without needing to have paid 50% upfront, provided the total property value meets the threshold. Thresholds and rules are set by UAE authorities and can change — your broker will confirm current criteria before you commit to anything.</p>
         </details>
         <details>
           <summary>Is my money protected during construction (off-plan)?</summary>
@@ -963,6 +967,10 @@
         <details>
           <summary>What about UK or Indian tax on my Dubai property?</summary>
           <p>The UAE doesn't tax personal rental income or capital gains, but your UK tax residency (and, for NRIs, your Indian tax position) can still create obligations on income or gains at home. This is genuinely worth a conversation with a qualified UK/India tax adviser before you buy — we don't provide tax or financial advice ourselves.</p>
+        </details>
+        <details>
+          <summary>I'm based in India — how much can I actually send abroad?</summary>
+          <p>Under RBI's Liberalised Remittance Scheme (LRS), Indian residents can remit up to USD 250,000 per person per financial year for permitted purposes including overseas property. Remittances above ₹10 lakh in a year attract 20% TCS (reclaimable via your ITR, not a final cost, but affects cash flow at the time of transfer). Families can combine limits by adding each contributing member as a co-owner. This is general information, not tax advice — your bank's authorised dealer will confirm the current process and documentation.</p>
         </details>
         <details>
           <summary>Who exactly sees my details?</summary>
@@ -990,7 +998,7 @@
 <footer id="legal">
   <div class="wrap">
     <div class="flogo">LDN → DXB Property Desk</div>
-    <div>Independent property referral service for UK-based and NRI buyers considering Dubai, UAE.</div>
+    <div>Independent property referral service for UK-based, NRI, and India-based buyers considering Dubai, UAE.</div>
     <div class="foot-links">
       <a href="#why">Why Dubai</a>
       <a href="#process">How It Works</a>
@@ -1027,9 +1035,106 @@
   const WHATSAPP_NUMBER = "447788725419"; // <-- REPLACE with your real WhatsApp number
   const CONVERTKIT_FORM_ID = "9719409"; // <-- your Kit form ID
 
+  /* =====================================================================
+     MARKET CONTENT — three audience variants shown/hidden via the
+     segmented control in the hero. Add or edit copy here; everything
+     else (form, WhatsApp, Kit submission) stays the same regardless of
+     which market is selected.
+  ===================================================================== */
+  const MARKET_CONTENT = {
+    "uk": {
+      label: "UK Resident",
+      stampType: "UK RESIDENT",
+      eyebrow: "LHR / MAN / BHX → DXB · By referral only",
+      headline: "Your Dubai address,<br><em>secured from London.</em>",
+      lead: "A private desk for UK-based buyers who want in on Dubai property — tax-free rental income, Golden Visa eligibility, and a fully remote buying process — matched with vetted, RERA-regulated brokers on the ground in Dubai.",
+      concernsEyebrow: "Built for this route specifically",
+      concernsHeading: "The questions UK buyers ask most",
+      step4: "Your broker handles reservation, contracts, escrow and handover — remotely, or on your next visit to Dubai.",
+      concerns: [
+        ["REMOTE", "Can I really buy without flying out?", "Yes — KYC, reservation, and signing can be completed remotely with your matched broker, with a site visit optional rather than required before completion."],
+        ["FX", "How do I handle GBP → AED currency risk?", "Your broker can talk you through staged payment plans and currency timing options — this is a decision worth taking independent FX advice on, especially for larger sums."],
+        ["REPATRIATION", "Can I get rental income and sale proceeds back to the UK?", "The UAE has no capital controls on repatriation, but your UK tax residency will determine what you owe at home. We'll flag this — we won't advise on it ourselves."],
+        ["FINANCE", "Can I get a mortgage as a UK resident?", "A number of UAE banks offer non-resident financing structures for UK-based buyers. Your matched broker can point you to lenders who work with UK applicants."],
+        ["AFTERCARE", "Who manages the property once I own it?", "Most buyers on this route don't relocate immediately. Property management, tenanting and maintenance are typically arranged through the broker's partner network after handover."]
+      ]
+    },
+    "uk-nri": {
+      label: "UK-based NRI",
+      stampType: "UK NRI",
+      eyebrow: "LHR / MAN / BHX → DXB · By referral only",
+      headline: "Your Dubai address,<br><em>secured from London.</em>",
+      lead: "A private desk for UK-based NRI buyers who want in on Dubai property — tax-free rental income, Golden Visa eligibility, and a fully remote buying process — matched with vetted, RERA-regulated brokers on the ground in Dubai.",
+      concernsEyebrow: "Built for this route specifically",
+      concernsHeading: "The questions UK-based NRI buyers ask most",
+      step4: "Your broker handles reservation, contracts, escrow and handover — remotely, or on your next visit to Dubai.",
+      concerns: [
+        ["REMOTE", "Can I really buy without flying out?", "Yes — KYC, reservation, and signing can be completed remotely with your matched broker, with a site visit optional rather than required before completion."],
+        ["FUNDING", "How do I fund the purchase from the UK?", "As a UK resident, you're not subject to India's LRS remittance limits — funding typically comes directly from UK earnings or savings. Your broker can talk through staged payment plans."],
+        ["REPATRIATION", "Can I get rental income and sale proceeds back to the UK or India?", "The UAE has no capital controls on repatriation, but your UK tax residency, and any India-UAE tax treaty position if relevant to you, will determine what you owe at home. We'll flag this — we won't advise on it ourselves."],
+        ["FINANCE", "Are Sharia-compliant or NRI-specific mortgages available?", "A number of UAE banks and financiers offer Islamic and non-resident financing structures. Your matched broker can point you to lenders who work with NRI applicants."],
+        ["SUCCESSION", "What happens to the property under inheritance law?", "UAE freehold property can be subject to UAE succession rules unless you register a will with the DLD's non-Muslim wills registry. Worth raising with your broker and, separately, a qualified legal adviser."]
+      ]
+    },
+    "india": {
+      label: "India-based Buyer",
+      stampType: "INDIA RESIDENT",
+      eyebrow: "DEL / BOM / BLR → DXB · By referral only",
+      headline: "Your Dubai address,<br><em>secured from India.</em>",
+      lead: "A private desk for India-based buyers who want in on Dubai property — tax-free rental income, Golden Visa eligibility, and a fully remote buying process — matched with vetted, RERA-regulated brokers on the ground in Dubai, within RBI's LRS framework.",
+      concernsEyebrow: "Built for this route specifically",
+      concernsHeading: "The questions India-based buyers ask most",
+      step4: "Your broker handles reservation, contracts, escrow and handover. Your remittance is routed through your bank under LRS (Form A2, purpose code S0005) — your broker and bank coordinate timing with the payment schedule.",
+      concerns: [
+        ["LRS LIMIT", "How much can I actually remit from India?", "Up to USD 250,000 per person per financial year under RBI's Liberalised Remittance Scheme (LRS) — the only compliant channel for Indian residents to buy property overseas."],
+        ["TCS", "Will tax be deducted when I send the money?", "Remittances up to ₹10 lakh a year attract no TCS. Above that, a 20% TCS applies for property purchases — reclaimable via your ITR (it shows in Form 26AS), but it affects your cash flow at the time of transfer."],
+        ["COMPLIANCE", "What documentation does my bank need?", "Your remittance is routed through an Authorised Dealer bank using Form A2, declared under purpose code S0005 — 'Indian investment abroad in real estate.' Your broker and bank can confirm the exact paperwork."],
+        ["ELIGIBILITY", "Does everyone qualify to use LRS?", "LRS is available to resident individuals under FEMA, including minors (with a guardian's declaration). HUFs, corporates, partnerships and trusts cannot use LRS for overseas property."],
+        ["FAMILY POOLING", "Can my family combine limits for a bigger purchase?", "Yes — each contributing family member can be added as a co-owner, effectively combining separate USD 250,000 allowances within compliance."]
+      ]
+    }
+  };
+
+  let currentMarket = "uk";
+
+  function renderMarket(key){
+    const m = MARKET_CONTENT[key];
+    if(!m) return;
+    currentMarket = key;
+
+    document.getElementById('hero-eyebrow').textContent = m.eyebrow;
+    document.getElementById('hero-headline').innerHTML = m.headline;
+    document.getElementById('hero-lead').textContent = m.lead;
+    document.getElementById('stamp-sub').textContent = "PASSENGER TYPE: " + m.stampType + "  ·  STATUS: ENQUIRY OPEN";
+    document.getElementById('concerns-eyebrow').textContent = m.concernsEyebrow;
+    document.getElementById('concerns-heading').textContent = m.concernsHeading;
+    document.getElementById('step4-desc').textContent = m.step4;
+
+    const list = document.getElementById('concerns-list');
+    list.innerHTML = m.concerns.map(function(c){
+      return '<div class="concern"><span class="tag">' + c[0] + '</span>' +
+             '<div><h4>' + c[1] + '</h4><p>' + c[2] + '</p></div></div>';
+    }).join('');
+
+    document.querySelectorAll('.market-btn').forEach(function(btn){
+      const active = btn.getAttribute('data-market') === key;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  document.querySelectorAll('.market-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      renderMarket(btn.getAttribute('data-market'));
+    });
+  });
+
+  renderMarket('uk');
+
   function buildWhatsAppMessage(data){
     return (
       "New Dubai property enquiry\n" +
+      "Market: " + data.market + "\n" +
       "Name: " + data.fname + "\n" +
       "Phone/WhatsApp: " + data.phone + "\n" +
       "Email: " + data.email + "\n" +
@@ -1079,7 +1184,8 @@
       "fields[budget]": data.budget,
       "fields[goal]": data.purpose,
       "fields[preferred_area]": data.area || "Not specified",
-      "fields[timeline]": data.timeline
+      "fields[timeline]": data.timeline,
+      "fields[market]": data.market
     };
 
     Object.keys(fields).forEach(function(key){
@@ -1127,7 +1233,8 @@
       budget: form.budget.value,
       purpose: form.purpose.value,
       area: form.area.value.trim(),
-      timeline: form.timeline.value
+      timeline: form.timeline.value,
+      market: MARKET_CONTENT[currentMarket].label
     };
 
     // Fire the Kit (ConvertKit) subscription and the WhatsApp handoff together.
